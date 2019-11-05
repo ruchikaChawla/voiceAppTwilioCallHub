@@ -1,0 +1,17 @@
+{% extends 'base/base.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CallHubPhoneBook</title>
+</head>
+<body>
+<h3>Phonebooks</h3>
+<form action="{% url 'create_phone_book' %}">
+    {% csrf_token %}
+<input type="submit" value="Create New PhoneBook">
+    </form>
+</body>
+</html>
+{% endblock %}

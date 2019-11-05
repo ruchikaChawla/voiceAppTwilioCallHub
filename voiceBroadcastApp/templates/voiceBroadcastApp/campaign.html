@@ -1,0 +1,22 @@
+{% extends 'base/base.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Campaign</title>
+</head>
+<body>
+<h3>All Campaigns</h3>
+<form action="{% url 'add_campaign' %}">
+    {% csrf_token %}
+<input type="submit" value="New Campaign">
+    </form>
+{% for instance in data %}
+    {% for field, value in instance.fields.items %}
+
+    {% endfor %}
+{% endfor %}
+</body>
+</html>
+{% endblock %}

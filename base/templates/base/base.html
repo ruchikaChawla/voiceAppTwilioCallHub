@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>CallHubVoiceBroadcastApp</title>
+  <body>
+      {% if user.is_authenticated %}
+    <strong> Welcome {{ user }}! </strong>
+         <a href="{% url 'logout' %}">
+          Logout </a>&nbsp
+     {% else %}
+           <a href="{% url 'register' %}">
+          Register </a>&nbsp
+           <a href="{% url 'login' %}">
+          Login </a>&nbsp
+     {% endif %}
+      <a href="{% url 'home' %}">
+          Home </a>&nbsp
+      <a href="{% url 'phonebooks' %}">
+          Phone Book </a>&nbsp
+      <a href="{% url 'contacts' %}">
+          Contacts </a>&nbsp
+      <a href="{% url 'campaign' %}">
+           Campaigns </a>&nbsp
+      <a href="">
+           Call History </a>&nbsp
+      <br><br>
+  {% block content %}{% endblock %}
+  </body>
+</html>
