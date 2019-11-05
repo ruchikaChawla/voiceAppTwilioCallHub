@@ -37,7 +37,7 @@ def contacts(request):
 
 
 def add_contact(request):
-    print("hello world")
+    print("hello world tarun")
     if request.method == 'POST':
         form = ContactForm(request.POST, request.FILES or None)
         if form.is_valid():
@@ -49,15 +49,8 @@ def add_contact(request):
 
 
 def campaign(request):
-    data = serializers.serialize("python", Campaign.objects.filter(agent=request.user), fields=('id', 'name', 'status', 'creation_date', 'started_date'))
     campaigns = Campaign.objects.filter(agent=request.user)
-    print(campaigns)
-    for campaign in campaigns:
-        print(campaign.id)
-    col_names = Campaign.objects.values().__getitem__(0).keys()
-    print(col_names)
-    return render(request, 'voiceBroadcastApp/campaign.html', {'campaigns': campaigns, 'col_names': col_names, 'data': data})
-
+    return render(request, 'voiceBroadcastApp/campaign.html', {'campaigns': campaigns})
 
 def add_campaign(request):
     if request.method == 'POST':
@@ -86,3 +79,7 @@ def register(request):
         form = UserCreationForm()
     context = {'form': form}
     return render(request, 'registration/register.html', context)
+
+def start_campaign(request, id):
+    print("tarun")
+    return HttpResponseRedirect("/campaign/")

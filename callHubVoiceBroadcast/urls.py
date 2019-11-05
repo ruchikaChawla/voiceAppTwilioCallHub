@@ -17,12 +17,12 @@ from django.contrib import admin
 from django.urls import path
 from django.contrib.auth import views as auth_views
 
-
-from voiceBroadcastApp.views import home, add_contact, register, phonebooks, contacts, campaign, create_phone_book, add_campaign
+from voiceBroadcastApp.views import home, add_contact, register, phonebooks, contacts, campaign, create_phone_book, \
+    add_campaign, start_campaign
 
 urlpatterns = [
     path('', home, name='home'),
-   # path('status/', index, name='index'),
+    # path('status/', index, name='index'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('register/', register, name='register'),
@@ -33,4 +33,5 @@ urlpatterns = [
     path('add_contact/', add_contact, name='add_contact'),
     path('campaign/', campaign, name='campaign'),
     path('add_campaign/', add_campaign, name='add_campaign'),
+    path('start_campaign/<int:id>', start_campaign, name='start_campaign')
 ]

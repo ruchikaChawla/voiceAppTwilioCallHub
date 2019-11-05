@@ -1,30 +1,32 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <title>CallHubVoiceBroadcastApp</title>
-  <body>
-      {% if user.is_authenticated %}
-    <strong> Welcome {{ user }}! </strong>
-         <a href="{% url 'logout' %}">
-          Logout </a>&nbsp
-     {% else %}
-           <a href="{% url 'register' %}">
-          Register </a>&nbsp
-           <a href="{% url 'login' %}">
-          Login </a>&nbsp
-     {% endif %}
-      <a href="{% url 'home' %}">
-          Home </a>&nbsp
-      <a href="{% url 'phonebooks' %}">
-          Phone Book </a>&nbsp
-      <a href="{% url 'contacts' %}">
-          Contacts </a>&nbsp
-      <a href="{% url 'campaign' %}">
-           Campaigns </a>&nbsp
-      <a href="">
-           Call History </a>&nbsp
-      <br><br>
-  {% block content %}{% endblock %}
-  </body>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<body>
+{% if user.is_authenticated %}
+    <div class="title is-4"> Welcome {{ user }}!</div>
+    <a href="{% url 'logout' %}">
+        Logout </a>&nbsp
+{% else %}
+    <a href="{% url 'register' %}">
+        Register </a>&nbsp
+    <a href="{% url 'login' %}">
+        Login </a>&nbsp
+{% endif %}
+<a href="{% url 'home' %}">
+    Home </a>&nbsp
+<a href="{% url 'phonebooks' %}">
+    Phone Book </a>&nbsp
+<a href="{% url 'contacts' %}">
+    Contacts </a>&nbsp
+<a href="{% url 'campaign' %}">
+    Campaigns </a>&nbsp
+<a href="">
+    Call History </a>&nbsp
+
+{% block content %}{% endblock %}
+</body>
 </html>

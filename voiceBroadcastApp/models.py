@@ -29,7 +29,7 @@ class Contact(models.Model):
     phone_book = models.ForeignKey(PhoneBook, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.phone_number
+        return str(self.phone_number)
 
 
 class Campaign(models.Model):
