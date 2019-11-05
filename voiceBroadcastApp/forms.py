@@ -1,3 +1,4 @@
+import kwargs as kwargs
 from django.forms import ModelForm
 
 from voiceBroadcastApp.models import Contact, PhoneBook, Campaign
@@ -20,8 +21,15 @@ class PhoneBookForm(ModelForm):
 
 
 class CampaignForm(ModelForm):
+    def __init__(self, *args, **kwrgs):
+        self.user = kwrgs.pop('user', None)
+        super(CampaignForm, self).__init__(*args, **kwrgs)
+        self.fields['phone_book'].queryset = PhoneBook.objects.filter(agent=self.user)
     class Meta:
         model = Campaign
-        fields = ['name',
-                  'text_speech',
-                  'phone_book']
+        fields = ['name','text_speech', 'phone_book']
+
+class CampaignForm2(ModelForm):
+    class Meta:
+        model = Campaign
+        fields = ['name','text_speech', 'phone_book']

@@ -26,7 +26,7 @@ class Contact(models.Model):
     last_name = models.CharField(max_length=255, default='')
     created_date = models.DateTimeField(default=datetime.now())
     phone_number = models.IntegerField(unique=True)
-    phone_book = models.ForeignKey(PhoneBook, on_delete=models.CASCADE)
+    phone_book = models.ManyToManyField(PhoneBook)
 
     def __str__(self):
         return str(self.phone_number)

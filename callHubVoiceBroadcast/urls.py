@@ -17,16 +17,17 @@ from django.contrib import admin
 from django.urls import path
 from django.contrib.auth import views as auth_views
 
+from StatusCallback.views import index
 from voiceBroadcastApp.views import home, add_contact, register, phonebooks, contacts, campaign, create_phone_book, \
     add_campaign, start_campaign
 
 urlpatterns = [
     path('', home, name='home'),
-    # path('status/', index, name='index'),
+    path('admin/', admin.site.urls),
+    path('status/', index, name='index'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('register/', register, name='register'),
-    path('admin/', admin.site.urls),
     path('phonebooks/', phonebooks, name='phonebooks'),
     path('create_phone_book/', create_phone_book, name='create_phone_book'),
     path('contacts/', contacts, name='contacts'),
