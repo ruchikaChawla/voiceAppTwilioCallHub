@@ -19,12 +19,12 @@ from django.contrib.auth import views as auth_views
 
 from StatusCallback.views import index
 from voiceBroadcastApp.views import home, add_contact, register, phonebooks, contacts, campaign, create_phone_book, \
-    add_campaign, start_campaign
+    add_campaign, start_campaign, status
 
 urlpatterns = [
     path('', home, name='home'),
     path('admin/', admin.site.urls),
-    path('status/', index, name='index'),
+    path('status/', status, name='status'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('register/', register, name='register'),

@@ -26,7 +26,7 @@ class Contact(models.Model):
     last_name = models.CharField(max_length=255, default='')
     created_date = models.DateTimeField(default=datetime.now())
     phone_number = models.IntegerField(unique=True)
-    phone_book = models.ManyToManyField(PhoneBook)
+    phone_book = models.ManyToManyField(PhoneBook, related_name='phone_book')
 
     def __str__(self):
         return str(self.phone_number)
@@ -47,6 +47,8 @@ class Campaign(models.Model):
 
 class Call(models.Model):
     agent = models.CharField(max_length=255, default='admin')
+    call_sid = models.CharField(max_length=255, default='admin', unique=True)
+    campaign_id = models.ForeignKey(Campaign, on_delete=models.CASCADE)
     start_date = models.DateTimeField(default=datetime.now())
     duration = models.IntegerField()
     contact = models.ForeignKey(Contact, on_delete=models.CASCADE)
