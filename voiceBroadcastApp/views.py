@@ -39,7 +39,7 @@ def phonebooks(request):
 
 def create_phone_book(request):
     if request.method == 'POST':
-        form = PhoneBookForm(request.POST, request.FILES or None)
+        form = PhoneBookForm(request.POST)
         if form.is_valid():
             newForm = form.save(commit=False)
             newForm.agent = request.user
@@ -54,6 +54,11 @@ def contacts(request):
     if not request.user.is_authenticated:
         return render(request, 'registration/login.html')
     contacts = Contact.objects.filter(agent=request.user)
+    return render(request, 'voiceBroadcastApp/contacts.html', {'contacts': contacts})
+
+
+def view_phonebook_contacts(request, id):
+    contacts = PhoneBook.objects.get(id=id).contact_set.all()
     return render(request, 'voiceBroadcastApp/contacts.html', {'contacts': contacts})
 
 
@@ -120,7 +125,6 @@ def register(request):
 @csrf_exempt
 def status(request):
     if request.method == 'POST':
-        print(request.body)
         status = parse_qs(request.body.decode('UTF-8'))
         per_min_cost = 2
         total_cost = (per_min_cost * int(status['CallDuration'][0])) / 60
@@ -175,3 +179,17 @@ def campaign_call_history(request, id):
         return render(request, 'registration/login.html')
     calls = Campaign.objects.get(id=id).call_set.all()
     return render(request, 'voiceBroadcastApp/call_history.html', {'calls': calls})
+
+
+def edit_contacts(request, id):
+    contact = Contact.objects.get(id=id)
+    if request.method == 'POST':
+        contactForm = ContactForm2(request.POST, instance=contact)
+        if contactForm.is_valid():
+            newForm = contactForm.save(commit=False)
+            newForm.save()
+            contactForm.save_m2m()
+            return HttpResponseRedirect("/contacts/")
+    else:
+        contactForm = ContactForm2(instance=contact)
+    return render(request, 'voiceBroadcastApp/edit_contacts.html', {'form': contactForm})

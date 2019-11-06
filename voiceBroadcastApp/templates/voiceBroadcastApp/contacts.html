@@ -31,6 +31,8 @@
                         <td>{{ contact.last_name }}</td>
                         <td>{{ contact.phone_number }}</td>
                         <td>{{ contact.created_date }}</td>
+                        <td><a href="../edit_contacts/{{ contact.id }}" class="button is-small is-link">
+                            Edit Contacts </a></td>
                     </tr>
                 {% endfor %}
             </table>

@@ -41,10 +41,10 @@
                                 <a href="#" class="button is-small is-primary" disabled> Start </a>
                             {% endif %}
                             {% if campaign.status == "completed" %}
-                                <a href="../campaign_call_history/{{ campaign.id }}" class="button is-small is-primary">
+                                <a href="../campaign_call_history/{{ campaign.id }}" class="button is-small is-link">
                                     Call History </a>
                             {% else %}
-                                <a href="#" class="button is-small is-primary" disabled> Call History </a>
+                                <a href="#" class="button is-small is-link" disabled> Call History </a>
                             {% endif %}
                         </td>
                     </tr>

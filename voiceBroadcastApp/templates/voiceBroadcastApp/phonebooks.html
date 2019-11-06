@@ -29,6 +29,8 @@
                         <td>{{ phonebook.name }}</td>
                         <td>{{ phonebook.description }}</td>
                         <td>{{ phonebook.created_date }}</td>
+                        <td><a href="../view_phonebook_contacts/{{ phonebook.id }}" class="button is-small is-link">
+                            View Contacts </a></td>
                     </tr>
                 {% endfor %}
             </table>
@@ -36,4 +38,4 @@
     </div>
     </body>
     </html>
-{% endblock %}
+{% endblock %}>
