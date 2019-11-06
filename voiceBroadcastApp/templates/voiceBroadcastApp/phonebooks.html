@@ -1,17 +1,39 @@
 {% extends 'base/base.html' %}
 {% block content %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>CallHubPhoneBook</title>
-</head>
-<body>
-<h3>Phonebooks</h3>
-<form action="{% url 'create_phone_book' %}">
-    {% csrf_token %}
-<input type="submit" value="Create New PhoneBook">
-    </form>
-</body>
-</html>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>CallHubPhoneBook</title>
+    </head>
+    <body>
+    <div class="container">
+        <div class="section">
+            <h3 class="content title is-4">Phonebooks</h3>
+            <form action="{% url 'create_phone_book' %}">
+                {% csrf_token %}
+                <input class="button is-primary is-small" type="submit" value="Create New PhoneBook">
+            </form>
+        </div>
+        <div class="table-container">
+            <table class="table">
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Created Date</th>
+                </tr>
+                {% for phonebook in phonebooks %}
+                    <tr>
+                        <td>{{ phonebook.id }}</td>
+                        <td>{{ phonebook.name }}</td>
+                        <td>{{ phonebook.description }}</td>
+                        <td>{{ phonebook.created_date }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    </body>
+    </html>
 {% endblock %}

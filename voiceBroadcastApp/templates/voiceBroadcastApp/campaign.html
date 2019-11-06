@@ -34,7 +34,18 @@
                         <td>{{ campaign.started_date }}</td>
                         <td>{{ campaign.status }}</td>
                         <td>
-                            <a href="../start_campaign/{{ campaign.id }}" class="button is-small is-primary"> Start </a>
+                            {% if campaign.status == "created" %}
+                                <a href="../start_campaign/{{ campaign.id }}" class="button is-small is-primary">
+                                    Start </a>
+                            {% else %}
+                                <a href="#" class="button is-small is-primary" disabled> Start </a>
+                            {% endif %}
+                            {% if campaign.status == "completed" %}
+                                <a href="../campaign_call_history/{{ campaign.id }}" class="button is-small is-primary">
+                                    Call History </a>
+                            {% else %}
+                                <a href="#" class="button is-small is-primary" disabled> Call History </a>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}

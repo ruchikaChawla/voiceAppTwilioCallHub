@@ -1,0 +1,39 @@
+{% extends 'base/base.html' %}
+{% block content %}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Call Records</title>
+    </head>
+    <body>
+    <div class="container">
+        <div class="aligned">
+            <h3 class="content title is-4">Call Records</h3>
+        </div>
+        <div class="table-container">
+            <table class="table">
+                <tr>
+                    <th>Id</th>
+                    <th>Start Date</th>
+                    <th>Caller ID</th>
+                    <th>Phone No</th>
+                    <th>Duration</th>
+                    <th>Cost</th>
+                </tr>
+                {% for call in calls %}
+                    <tr>
+                        <td>{{ call.id }}</td>
+                        <td>{{ call.start_date }}</td>
+                        <td>{{ call.caller_id}}</td>
+                        <td>{{ call.contact.phone_number }}</td>
+                        <td>{{ call.duration }}</td>
+                        <td>{{ call.cost }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    </body>
+    </html>
+{% endblock %}

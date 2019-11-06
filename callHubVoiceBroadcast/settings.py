@@ -25,7 +25,7 @@ SECRET_KEY = 'q7@zf9g04ez0$^#-)(sb84odcgz$$!e6lqd(lk9h-d-n)-v%7i'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['7f92a7e8.ngrok.io']
+ALLOWED_HOSTS = ['d07a31b8.ngrok.io']
 
 
 # Application definition
@@ -38,8 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'base',
-    'voiceBroadcastApp',
-    'StatusCallback'
+    'voiceBroadcastApp'
 ]
 
 MIDDLEWARE = [
@@ -122,3 +121,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/login'

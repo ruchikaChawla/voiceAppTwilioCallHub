@@ -5,12 +5,13 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
+from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
 from twilio.rest import Client
 from urllib.parse import parse_qs
 
 # Create your views here.
-from voiceBroadcastApp.forms import PhoneBookForm, CampaignForm, ContactForm, CampaignForm2
+from voiceBroadcastApp.forms import PhoneBookForm, CampaignForm, ContactForm, CampaignForm2, ContactForm2
 from voiceBroadcastApp.models import Campaign, Contact, PhoneBook, Call
 
 
@@ -18,8 +19,22 @@ def home(request):
     return render(request, 'base/base.html')
 
 
+@csrf_exempt
+def voice_xml(request, id, phone_no):
+    campaign_text = Campaign.objects.get(id=id).text_speech
+    name = Contact.objects.get(phone_number=phone_no).first_name
+    available_params = {'first_name': name}
+    new_str = campaign_text.format(**available_params)
+    template_var = {'msg': new_str}
+    t = loader.get_template('voiceBroadcastApp/voice.xml')
+    return HttpResponse(t.render(template_var), content_type='text/xml')
+
+
 def phonebooks(request):
-    return render(request, 'voiceBroadcastApp/phonebooks.html')
+    if not request.user.is_authenticated:
+        return render(request, 'registration/login.html')
+    phonebooks = PhoneBook.objects.filter(agent=request.user)
+    return render(request, 'voiceBroadcastApp/phonebooks.html', {'phonebooks': phonebooks})
 
 
 def create_phone_book(request):
@@ -29,37 +44,53 @@ def create_phone_book(request):
             newForm = form.save(commit=False)
             newForm.agent = request.user
             newForm.save()
-            return HttpResponseRedirect('#')
+            return HttpResponseRedirect('../phonebooks')
     else:
         form = PhoneBookForm()
     return render(request, 'voiceBroadcastApp/create_phone_book.html', {'form': form})
 
 
 def contacts(request):
-    return render(request, 'voiceBroadcastApp/contacts.html')
+    if not request.user.is_authenticated:
+        return render(request, 'registration/login.html')
+    contacts = Contact.objects.filter(agent=request.user)
+    return render(request, 'voiceBroadcastApp/contacts.html', {'contacts': contacts})
 
 
 def add_contact(request):
     if request.method == 'POST':
-        form = ContactForm(request.POST, request.FILES or None)
+        form = ContactForm2(request.POST)
         if form.is_valid():
             newForm = form.save(commit=False)
             newForm.agent = request.user
             newForm.save()
+            form.save_m2m()
             return HttpResponseRedirect('#')
     else:
-        form = ContactForm()
+        form = ContactForm(user=request.user)
     return render(request, 'voiceBroadcastApp/add_new_contact.html', {'form': form})
 
 
 def campaign(request):
+    if not request.user.is_authenticated:
+        return render(request, 'registration/login.html')
     campaigns = Campaign.objects.filter(agent=request.user)
+    for campaign in campaigns:
+        calls = campaign.call_set.all()
+        completed = True
+        for call in calls:
+            if not call.completed:
+                completed = False
+        if calls.count() > 0:
+            if completed:
+                campaign.status = 'completed'
+        campaign.save()
     return render(request, 'voiceBroadcastApp/campaign.html', {'campaigns': campaigns})
 
 
 def add_campaign(request):
     if request.method == 'POST':
-        form = CampaignForm2(request.POST, request.FILES or None)
+        form = CampaignForm2(request.POST)
         if form.is_valid():
             newForm = form.save(commit=False)
             newForm.agent = request.user
@@ -85,16 +116,21 @@ def register(request):
     context = {'form': form}
     return render(request, 'registration/register.html', context)
 
+
 @csrf_exempt
 def status(request):
     if request.method == 'POST':
         print(request.body)
         status = parse_qs(request.body.decode('UTF-8'))
+        per_min_cost = 2
+        total_cost = (per_min_cost * int(status['CallDuration'][0])) / 60
         call = Call.objects.get(call_sid=status['CallSid'][0])
-        call.duration=status['CallDuration'][0]
+        call.duration = status['CallDuration'][0]
+        call.completed = True
+        call.cost = total_cost
         call.save()
-        print(status['CallDuration'][0])
         return HttpResponse('OK', 200)
+
 
 def start_campaign(request, id):
     campaign = Campaign.objects.get(id=id)
@@ -103,7 +139,6 @@ def start_campaign(request, id):
     campaign.save()
     call_phonebook(request, campaign)
     return HttpResponseRedirect("/campaign/")
-
 
 
 def call_phonebook(request, campaign):
@@ -116,13 +151,27 @@ def call_phonebook(request, campaign):
         print(contact.phone_number)
         client = Client(account_sid, auth_token)
         call = client.calls.create(
-            status_callback='https://7f92a7e8.ngrok.io/status/',
+            status_callback='http://d07a31b8.ngrok.io/status/',
             status_callback_event=['completed'],
             status_callback_method='POST',
-            url='http://demo.twilio.com/docs/voice.xml',
+            url='http://d07a31b8.ngrok.io/xml/' + str(campaign.id) + '/' + str(contact.phone_number) + '/voice.xml/',
             to='+91' + str(contact.phone_number),
             from_='+19714071428'
         )
-        callDb = Call(agent=request.user, campaign_id=campaign, call_sid=call.sid, duration=0, contact=contact, cost=0)
+        callDb = Call(agent=request.user, caller_id='+19714071428', call_sid=call.sid, duration=0,
+                      contact=contact, cost=0, campaign=campaign)
         callDb.save()
-        print(call.sid)
+
+
+def call_history(request):
+    if not request.user.is_authenticated:
+        return render(request, 'registration/login.html')
+    calls = Call.objects.filter(agent=request.user)
+    return render(request, 'voiceBroadcastApp/call_history.html', {'calls': calls})
+
+
+def campaign_call_history(request, id):
+    if not request.user.is_authenticated:
+        return render(request, 'registration/login.html')
+    calls = Campaign.objects.get(id=id).call_set.all()
+    return render(request, 'voiceBroadcastApp/call_history.html', {'calls': calls})

@@ -17,9 +17,8 @@ from django.contrib import admin
 from django.urls import path
 from django.contrib.auth import views as auth_views
 
-from StatusCallback.views import index
 from voiceBroadcastApp.views import home, add_contact, register, phonebooks, contacts, campaign, create_phone_book, \
-    add_campaign, start_campaign, status
+    add_campaign, start_campaign, status, call_history, voice_xml, campaign_call_history
 
 urlpatterns = [
     path('', home, name='home'),
@@ -34,5 +33,8 @@ urlpatterns = [
     path('add_contact/', add_contact, name='add_contact'),
     path('campaign/', campaign, name='campaign'),
     path('add_campaign/', add_campaign, name='add_campaign'),
-    path('start_campaign/<int:id>', start_campaign, name='start_campaign')
+    path('call_history/', call_history, name='call_history'),
+    path('xml/<int:id>/<int:phone_no>/voice.xml/', voice_xml, name='voice_xml'),
+    path('start_campaign/<int:id>', start_campaign, name='start_campaign'),
+    path('campaign_call_history/<int:id>', campaign_call_history, name='campaign_call_history')
 ]

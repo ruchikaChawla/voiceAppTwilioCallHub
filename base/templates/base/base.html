@@ -4,17 +4,9 @@
 <head>
     <title>CallHubVoiceBroadcastApp</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <body>
 {% if user.is_authenticated %}
-    <div class="title is-4"> Welcome {{ user }}!</div>
-    <a href="{% url 'logout' %}">
-        Logout </a>&nbsp
-{% else %}
-    <a href="{% url 'register' %}">
-        Register </a>&nbsp
-    <a href="{% url 'login' %}">
-        Login </a>&nbsp
+<div class="title is-4"> Welcome {{ user }}!</div>
 {% endif %}
 <a href="{% url 'home' %}">
     Home </a>&nbsp
@@ -24,8 +16,17 @@
     Contacts </a>&nbsp
 <a href="{% url 'campaign' %}">
     Campaigns </a>&nbsp
-<a href="">
+<a href="{% url 'call_history' %}">
     Call History </a>&nbsp
+{% if user.is_authenticated %}
+    <a href="{% url 'logout' %}">
+        Logout </a>&nbsp
+{% else %}
+    <a href="{% url 'register' %}">
+        Register </a>&nbsp
+    <a href="{% url 'login' %}">
+        Login </a>&nbsp
+{% endif %}
 
 {% block content %}{% endblock %}
 </body>
