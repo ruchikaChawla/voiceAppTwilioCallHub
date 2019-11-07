@@ -1,6 +1,4 @@
 from django.contrib import admin
-
-# Register your models here.
 from voiceBroadcastApp.models import Contact, PhoneBook, Campaign, Call
 
 admin.site.register(Contact)

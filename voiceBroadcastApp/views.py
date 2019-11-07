@@ -8,8 +8,6 @@ from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
 from twilio.rest import Client
 from urllib.parse import parse_qs
-
-# Create your views here.
 from voiceBroadcastApp.forms import PhoneBookForm, CampaignForm, ContactForm, CampaignForm2, ContactForm2
 from voiceBroadcastApp.models import Campaign, Contact, PhoneBook, Call
 
@@ -57,8 +55,9 @@ def contacts(request):
 
 
 def view_phonebook_contacts(request, id):
-    contacts = PhoneBook.objects.get(id=id).contact_set.all()
-    return render(request, 'voiceBroadcastApp/contacts.html', {'contacts': contacts})
+    phonebook = PhoneBook.objects.get(id=id)
+    contacts = phonebook.contact_set.all()
+    return render(request, 'voiceBroadcastApp/contacts.html', {'contacts': contacts, 'phonebook_name': phonebook, 'id': id})
 
 
 def add_contact(request):
@@ -154,10 +153,10 @@ def call_phonebook(request, campaign):
         print(contact.phone_number)
         client = Client(account_sid, auth_token)
         call = client.calls.create(
-            status_callback='http://d07a31b8.ngrok.io/status/',
+            status_callback='http://ead3d853.ngrok.ioF/status/',
             status_callback_event=['completed'],
             status_callback_method='POST',
-            url='http://d07a31b8.ngrok.io/xml/' + str(campaign.id) + '/' + str(contact.phone_number) + '/voice.xml/',
+            url='http://ead3d853.ngrok.io/xml/' + str(campaign.id) + '/' + str(contact.phone_number) + '/voice.xml/',
             to='+91' + str(contact.phone_number),
             from_='+19714071428'
         )
@@ -177,7 +176,10 @@ def campaign_call_history(request, id):
     if not request.user.is_authenticated:
         return render(request, 'registration/login.html')
     calls = Campaign.objects.get(id=id).call_set.all()
-    return render(request, 'voiceBroadcastApp/call_history.html', {'calls': calls})
+    call_cost = 0
+    for call in calls:
+        call_cost = call_cost + call.cost
+    return render(request, 'voiceBroadcastApp/call_history.html', {'calls': calls, 'call_cost': call_cost, 'id': id})
 
 
 def edit_contacts(request, id):

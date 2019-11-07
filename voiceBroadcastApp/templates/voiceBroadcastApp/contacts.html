@@ -9,7 +9,11 @@
     <body>
     <div class="container">
         <div class="section">
-            <h3 class="content title is-4">Contacts</h3>
+            {% if id %}
+                <h3 class="content title is-4">{{ phonebook_name }}</h3>
+             {% else %}
+                <h3 class="content title is-4">Contacts</h3>
+            {% endif %}
             <form action="{% url 'add_contact' %}">
                 {% csrf_token %}
                 <input class="button is-primary is-small" type="submit" value="New Contact">
