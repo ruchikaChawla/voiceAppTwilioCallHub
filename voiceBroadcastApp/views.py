@@ -130,6 +130,7 @@ def status(request):
         call.duration = status['CallDuration'][0]
         call.completed = True
         call.cost = total_cost
+        print(status)
         call.save()
         return HttpResponse('OK', 200)
 
@@ -153,7 +154,7 @@ def call_phonebook(request, campaign):
         print(contact.phone_number)
         client = Client(account_sid, auth_token)
         call = client.calls.create(
-            status_callback='http://ead3d853.ngrok.ioF/status/',
+            status_callback='http://ead3d853.ngrok.io/status/',
             status_callback_event=['completed'],
             status_callback_method='POST',
             url='http://ead3d853.ngrok.io/xml/' + str(campaign.id) + '/' + str(contact.phone_number) + '/voice.xml/',
